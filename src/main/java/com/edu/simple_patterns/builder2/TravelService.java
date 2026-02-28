@@ -1,10 +1,7 @@
 package com.edu.simple_patterns.builder2;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public class TravelService {
-    public void createTravel() {
+    public static void main(String[] args) {
         HotelOrder order = new HotelOrder
                 .Builder("John Newman", "12/22/1973")
                 .withCountry("Brazil")
@@ -14,5 +11,11 @@ public class TravelService {
                 .withVacationsMembers(4)
                 .build();
         System.out.println("Заявка создана для путешественника: " + order.getFirstName());
+        System.out.println("Детали заявки: " +
+                "\n-страна: " + order.getCountry() +
+                "\n-название отеля: " + order.getHotel() +
+                "\n-дата заселения: " + order.getDateOfTravel() +
+                "\n-количество отдыхающих: " + order.getVacationsMembers()
+        );
     }
 }
