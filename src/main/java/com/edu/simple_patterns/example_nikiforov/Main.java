@@ -1,6 +1,29 @@
 package com.edu.simple_patterns.example_nikiforov;
 
+import java.awt.Color;
+
 public class Main {
+
+    public static void main(String[] args) {
+        int[][] model = new int[3][3];
+        int number = 1;
+        for (int i = 0; i < model[0].length; i++) {
+            for (int j = 0; j < model.length; j++) {
+                model[i][j] = number + 1;
+                number++;
+            }
+        }
+        System.out.println(model[model[0].length - 1][model.length - 1]);
+
+    }
+
+    public void setColor() {
+        Color white = Color.WHITE;
+        Color red = Color.RED;
+        Color blue = Color.BLUE;
+    }
+
+    /*
     public static void main(String[] args) {
 
         // Переменные
@@ -33,4 +56,6 @@ public class Main {
         String info = String.join(", ", firstName, lastName, String.valueOf(age));
         return info;
     }
+    */
+
 }
