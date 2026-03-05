@@ -14,4 +14,9 @@ public class Game {
 
     public void setCellValueEx(int x, int y, Color colorBoard, String sign ,Color colorSign) {
     }
+
+    public void showMessageDialog(Color colorBoard, String message, Color messageColor, int sign) {
+    }
+
+
 }

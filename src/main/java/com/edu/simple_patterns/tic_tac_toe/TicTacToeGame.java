@@ -1,6 +1,9 @@
 package com.edu.simple_patterns.tic_tac_toe;
 
 import java.awt.*;
+//import com.engine.cell.Color;
+//import com.engine.cell.Game;
+//import com.engine.cell.Key;
 
 public class TicTacToeGame extends Game {
     private boolean isGameStopped;
@@ -43,6 +46,64 @@ public class TicTacToeGame extends Game {
         }
     }
 
+    public void computerTurn() {
+        //ход в центр
+        if (model[1][1] == 0) {
+            setSignAndCheck(1, 1);
+            return;
+        }
+
+        //пробуем выиграть
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                if (checkFutureWin(x, y, currentPlayer)) {
+                    setSignAndCheck(x, y);
+                    return;
+                }
+            }
+        }
+
+        //мешаем выиграть противнику
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                if (checkFutureWin(x, y, 3 - currentPlayer)) {
+                    setSignAndCheck(x, y);
+                    return;
+                }
+            }
+        }
+
+        // любое пустое поле
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                if (model[x][y] == 0) {
+                    setSignAndCheck(x, y);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void setSignAndCheck(int x, int y) {
+        model[x][y] = currentPlayer;
+        updateView();
+        if (checkWin(x, y, currentPlayer)) {
+            isGameStopped = true;
+            if (currentPlayer == 1) {
+                showMessageDialog(Color.WHITE, "You Win!", Color.GREEN, 75);
+            }
+            if (currentPlayer == 2) {
+                showMessageDialog(Color.WHITE, "Game Over", Color.RED, 75);
+            }
+            return;
+        }
+        if (!hasEmptyCell()) {
+            isGameStopped = true;
+            showMessageDialog(Color.WHITE, " Draw!", Color.BLUE, 75);
+            return;
+        }
+    }
+
     @Override
     public void onMouseLeftClick(int x, int y) {
         if (isGameStopped) {
@@ -51,8 +112,49 @@ public class TicTacToeGame extends Game {
         if (model[x][y] != 0) {
             return;
         }
-        model[x][y] = currentPlayer;
-        updateView();
-        currentPlayer = 3 - currentPlayer; // 2 <--> 1
+        setSignAndCheck(x, y);
+        if (!isGameStopped) {
+            currentPlayer = 3 - currentPlayer; // 2 <--> 1
+            computerTurn();
+            if (!isGameStopped) {
+                currentPlayer = 3 - currentPlayer; // 2 <--> 1
+            }
+        }
+    }
+
+    public boolean hasEmptyCell() {
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                if (model[x][y] == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean checkWin(int x, int y, int n) {
+        boolean rowWin = model[x][0] == n && model[x][1] == n && model[x][2] == n;
+        boolean columnWin = model[0][y] == n && model[1][y] == n && model[2][y] == n;
+        boolean mainDiagonalWin = (x == y) && model[0][0] == n && model[1][1] == n && model[2][2] == n;
+        boolean antiDiagonalWin = (x + y == 2) && model[0][2] == n && model[1][1] == n && model[2][0] == n;
+        return rowWin || columnWin || mainDiagonalWin || antiDiagonalWin;
+    }
+
+//    public void onKeyPress(Key key) {
+//        if ((key == Key.SPACE && isGameStopped) || key == Key.ESCAPE) {
+//            startGame();
+//            updateView();
+//        }
+//    }
+
+    public boolean checkFutureWin(int x, int y, int n) {
+        if (model[x][y] != 0) {
+            return false;
+        }
+        model[x][y] = n;
+        boolean isWin = checkWin(x, y, n);
+        model[x][y] = 0;
+        return isWin;
     }
 }
